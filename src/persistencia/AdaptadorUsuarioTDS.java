@@ -27,7 +27,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
 	@Override
 	public void registrarUsuario(Usuario cliente) {
-		// TODO Auto-generated method stub
+		System.out.println("Estamos probando que esto  funcione bien ");
 
 	}
 
