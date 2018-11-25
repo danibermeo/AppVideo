@@ -7,13 +7,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-
+import com.toedter.calendar.JDateChooser;
 
 import beans.Entidad;
 import beans.Propiedad;
 import modelo.ListaVideos;
 import modelo.Usuario;
 import modelo.Video;
+import sun.text.normalizer.UBiDiProps;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
@@ -60,8 +61,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		}
 		eUsuario = new Entidad();
 		eUsuario.setNombre("usuario");
-		eUsuario.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad("usuario", usuario.getNombre()),
-				new Propiedad("password", usuario.getPassword()),
+		eUsuario.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(
+				new Propiedad("usuario", usuario.getNombreUsuario()), new Propiedad("password", usuario.getPassword()),
 				new Propiedad("FechaNacimiento",
 						String.valueOf(dateFormat.format(usuario.getFechaNacimiento().getDate()))),
 				new Propiedad("nombre", usuario.getNombre()), new Propiedad("apellidos", usuario.getApellidos()),
@@ -86,7 +87,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 	}
 
 	public void borrarUsuario() {
-		
+
 		List<Entidad> entidades = servPersistencia.recuperarEntidades("usuario");
 		for (Entidad entidad : entidades) {
 			servPersistencia.borrarEntidad(entidad);
@@ -105,8 +106,39 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 	}
 
 	@Override
-	public void modificarUsuario(Usuario cliente) {
-
+	public void modificarUsuario(Usuario usuario) {
+		Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getCodigo());
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, "password");
+		servPersistencia.anadirPropiedadEntidad(eUsuario, "password", usuario.getPassword());
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, "email");
+		servPersistencia.anadirPropiedadEntidad(eUsuario, "email", usuario.getEmail());
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, "nombre");
+		servPersistencia.anadirPropiedadEntidad(eUsuario, "nombre", usuario.getNombre());
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, "apellidos");
+		servPersistencia.anadirPropiedadEntidad(eUsuario, "apellidos", usuario.getApellidos());
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, "premium");
+		servPersistencia.anadirPropiedadEntidad(eUsuario, "premium", String.valueOf(usuario.isPremium()));
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, "usuario");
+		servPersistencia.anadirPropiedadEntidad(eUsuario, "usuario", usuario.getNombreUsuario());
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, "fechaNaciemto");
+		servPersistencia.anadirPropiedadEntidad(eUsuario, "fechaNaciento",
+				String.valueOf(dateFormat.format(usuario.getFechaNacimiento().getDate())));
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, "listasVideos");
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, "listaReceintes");
+		servPersistencia.anadirPropiedadEntidad(eUsuario, "listaReciente",
+				obtenerCodigosVideosDeLista(usuario.getListaReciente()));
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, "listasVideos");
+		// las listas de  videos de usuario 
+		LinkedList<ListaVideos> listaVideos = usuario.getListasVideos();
+		// el  string para la persistencia
+		String listasVideos = obtenerCodigosListasVideos(listaVideos);
+		
+		AdaptadorListaVideosTDS adaptadorV = AdaptadorListaVideosTDS.getUnicaInstancia();
+		// los añadimos 
+		for (ListaVideos lista : listaVideos) {
+			adaptadorV.registrarListaVideos(lista);
+		}
+		servPersistencia.anadirPropiedadEntidad(eUsuario, "listasVideos", listasVideos);
 
 	}
 

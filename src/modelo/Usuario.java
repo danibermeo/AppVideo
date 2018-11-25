@@ -12,7 +12,7 @@ public class Usuario {
 	private int codigo;
 	// datos del Usuario
 	private Boolean premium;
-	private Usuario login;
+	private final String  usuario;
 	private String password;
 	private String nombre;
 	private String apellidos;
@@ -22,10 +22,10 @@ public class Usuario {
 	private Map<Integer, ListaVideos> listasVideos;
 	private Filtro filtro;
 
-	public Usuario(int codigo, Usuario login, String passwd, String nombre, String apellidos, String email,
+	public Usuario(int codigo, String login, String passwd, String nombre, String apellidos, String email,
 			JDateChooser fecha, Boolean premiun) {
 		this.codigo = codigo;
-		this.login = login;
+		this.usuario = login;
 		this.password = passwd;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
@@ -36,7 +36,7 @@ public class Usuario {
 
 	}
 
-	public Usuario(int codigo, Usuario login, String passwd, String nombre, String apellidos, String email,
+	public Usuario(int codigo, String login, String passwd, String nombre, String apellidos, String email,
 			JDateChooser fecha) {
 		this(codigo, login, passwd, nombre, apellidos, email, fecha, false);
 	}
@@ -59,8 +59,8 @@ public class Usuario {
 		return codigo;
 	}
 
-	public Usuario getLogin() {
-		return login;
+	public String getNombreUsuario() {
+		return usuario;
 	}
 
 	public String getNombre() {
@@ -121,9 +121,7 @@ public class Usuario {
 		this.filtro = filtro;
 	}
 
-	public void setLogin(Usuario login) {
-		this.login = login;
-	}
+	
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
