@@ -12,7 +12,7 @@ public class Usuario {
 	private int codigo;
 	// datos del Usuario
 	private Boolean premium;
-	private final String  usuario;
+	private final String usuario;
 	private String password;
 	private String nombre;
 	private String apellidos;
@@ -21,10 +21,11 @@ public class Usuario {
 	private LinkedList<Video> listaReciente;
 	private Map<Integer, ListaVideos> listasVideos;
 	private Filtro filtro;
+	public final static int NUM_MAX_RECIENTES = 10;
 
-	public Usuario(int codigo, String login, String passwd, String nombre, String apellidos, String email,
-			JDateChooser fecha, Boolean premiun) {
-		this.codigo = codigo;
+	public Usuario(String login, String passwd, String nombre, String apellidos, String email, JDateChooser fecha,
+			Boolean premiun) {
+		// this.codigo = codigo;
 		this.usuario = login;
 		this.password = passwd;
 		this.nombre = nombre;
@@ -36,9 +37,8 @@ public class Usuario {
 
 	}
 
-	public Usuario(int codigo, String login, String passwd, String nombre, String apellidos, String email,
-			JDateChooser fecha) {
-		this(codigo, login, passwd, nombre, apellidos, email, fecha, false);
+	public Usuario(String login, String passwd, String nombre, String apellidos, String email, JDateChooser fecha) {
+		this(login, passwd, nombre, apellidos, email, fecha, false);
 	}
 
 	public List<Video> getFiltro() {
@@ -93,6 +93,21 @@ public class Usuario {
 															// this.listasVideos.values();
 	}
 
+	public void addListaAListaVideos(ListaVideos listaVideos) {
+		// assert(listasCanciones.getID() != null);
+		this.listasVideos.put(listaVideos.getCodigo(), listaVideos);
+
+	}
+
+	public void addRecienteVideos(Video video) {
+		if (listaReciente.size() == NUM_MAX_RECIENTES)
+			if (!listaReciente.stream().anyMatch(e -> e.getCodigo() == video.getCodigo())) {
+				listaReciente.removeLast();
+			} else if (!listaReciente.stream().anyMatch(e -> e.getCodigo() == video.getCodigo())) {
+				listaReciente.add(video);
+			}
+	}
+
 	public String getPassword() {
 		return password;
 	}
@@ -120,8 +135,6 @@ public class Usuario {
 	public void setFiltro(Filtro filtro) {
 		this.filtro = filtro;
 	}
-
-	
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;

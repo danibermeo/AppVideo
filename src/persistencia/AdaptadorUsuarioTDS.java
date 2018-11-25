@@ -1,5 +1,6 @@
 package persistencia;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,12 +10,14 @@ import java.util.StringTokenizer;
 
 import com.toedter.calendar.JDateChooser;
 
+import java.util.Date;
+
 import beans.Entidad;
 import beans.Propiedad;
 import modelo.ListaVideos;
 import modelo.Usuario;
 import modelo.Video;
-import sun.text.normalizer.UBiDiProps;
+
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
@@ -94,17 +97,6 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		}
 	}
 
-	public List<Usuario> getUsuarios() {
-		List<Usuario> usuarios = new LinkedList<>();
-		List<Entidad> eUsuarios = servPersistencia.recuperarEntidades("usuario");
-		assert (!eUsuarios.isEmpty());
-		for (Entidad entidad : eUsuarios) {
-			usuarios.add(recuperarUsuario(entidad.getId()));
-		}
-
-		return usuarios;
-	}
-
 	@Override
 	public void modificarUsuario(Usuario usuario) {
 		Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getCodigo());
@@ -128,13 +120,13 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		servPersistencia.anadirPropiedadEntidad(eUsuario, "listaReciente",
 				obtenerCodigosVideosDeLista(usuario.getListaReciente()));
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "listasVideos");
-		// las listas de  videos de usuario 
+		// las listas de videos de usuario
 		LinkedList<ListaVideos> listaVideos = usuario.getListasVideos();
-		// el  string para la persistencia
+		// el string para la persistencia
 		String listasVideos = obtenerCodigosListasVideos(listaVideos);
-		
+
 		AdaptadorListaVideosTDS adaptadorV = AdaptadorListaVideosTDS.getUnicaInstancia();
-		// los añadimos 
+		// los añadimos
 		for (ListaVideos lista : listaVideos) {
 			adaptadorV.registrarListaVideos(lista);
 		}
@@ -145,15 +137,69 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 	@Override
 	public Usuario recuperarUsuario(int codigo) {
 		// TODO Auto-generated method stub
-		return null;
+		// si ya esta en el pool la devuelvo directamente
+		if (PoolDAO.getUnicaInstancia().contiene(codigo)) {
+			return (Usuario) PoolDAO.getUnicaInstancia().getObjeto(codigo);
+		}
+		// si no esta la recupero de la base de datos
+		Entidad eUsuasrio = servPersistencia.recuperarEntidad(codigo);
+		String nombreUsuario = servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "usuario");
+		String password = servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "password");
+		// datos usuario
+		Date fechaNacimineto = null;
+		try {
+			fechaNacimineto = dateFormat
+					.parse(servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "fechaNacimiento"));
+		} catch (ParseException e) {
+
+			e.printStackTrace();
+		}
+		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "nombre");
+		String apellidos = servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "apellidos");
+		String email = servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "email");
+		// String premium =
+		// servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "premium");
+		boolean premium = Boolean.valueOf(servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "premium"));
+		Usuario usuario = new Usuario(nombreUsuario, password, nombre, apellidos, email,
+				new JDateChooser(fechaNacimineto));
+		usuario.setCodigo(codigo);
+		usuario.setPremium(premium);
+		// recuperar propiedades que no son objetos
+
+		// IMPORTANTE:añadir el usuario al pool antes de llamar a otros
+		// adaptadores
+
+		PoolDAO.getUnicaInstancia().addObjeto(codigo, usuario);
+		// recuperar propiedades que son objetos llamando a adaptadores
+		// ventas
+		List<Video> recienteVideos = new LinkedList<>();
+		recienteVideos = obtenerVideosDesdeCodigos(
+				servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "recientesViddeos"));
+		for (Video video : recienteVideos) {
+			usuario.addRecienteVideos(video);
+		}
+		List<ListaVideos> listasVideos = new LinkedList<>();
+		listasVideos = obtenerListasVideosDesdeCodigos(
+				servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "listasVideos"));
+		for (ListaVideos listaVideos : listasVideos) {
+			usuario.addListaAListaVideos(listaVideos);
+		}
+		return usuario;
 	}
 
 	@Override
 	public List<Usuario> recuperarTodosUsuarios() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Usuario> usuarios = new LinkedList<>();
+		List<Entidad> eUsuarios = servPersistencia.recuperarEntidades("usuario");
+		assert (!eUsuarios.isEmpty());
+		for (Entidad entidad : eUsuarios) {
+			usuarios.add(recuperarUsuario(entidad.getId()));
+		}
+
+		return usuarios;
 	}
 
+	/*----------------------FUNCIONES AUXILIARES ----------------------------------------------*/
 	private String obtenerCodigosListasVideos(LinkedList<ListaVideos> listasVideos) {
 
 		String codigos = "";
@@ -163,7 +209,6 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		return codigos.trim();
 	}
 
-	@SuppressWarnings("unused")
 	private List<ListaVideos> obtenerListasVideosDesdeCodigos(String recuperarPropiedadEntidad) {
 
 		LinkedList<ListaVideos> listaVideos = new LinkedList<>();
@@ -184,7 +229,6 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		return codigo;
 	}
 
-	@SuppressWarnings("unused")
 	private List<Video> obtenerVideosDesdeCodigos(String recuperarPropiedadEntidad) {
 		LinkedList<Video> videos = new LinkedList<>();
 		AdaptadorVideoTDS adaptadorVi = AdaptadorVideoTDS.getUnicaInstancia();

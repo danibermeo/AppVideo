@@ -14,6 +14,10 @@ import javax.swing.JButton;
 
 public class Login extends JPanel{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JFrame frame;
 	private JPasswordField passwordField;
 	private JPasswordField passwordField_1;
