@@ -3,6 +3,7 @@ package modelo;
 import java.util.LinkedList;
 
 public class ListaVideos {
+	private int codigo;
 	private String nombreLista;
 	private int numeroVideos;
 	private LinkedList<Video> videos;
@@ -33,6 +34,14 @@ public class ListaVideos {
 
 	public void setNumeroVideos(int numeroVideos) {
 		this.numeroVideos = numeroVideos;
+	}
+
+	public int getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
 	}
 
 }
