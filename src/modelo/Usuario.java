@@ -19,7 +19,7 @@ public class Usuario {
 	private String email;
 	private JDateChooser fechaNacimiento;
 	private LinkedList<Video> listaReciente;
-	private Map<ListaVideos, LinkedList<Video>> listasVideos;
+	private Map<Integer, ListaVideos> listasVideos;
 	private Filtro filtro;
 
 	public Usuario(int codigo, Usuario login, String passwd, String nombre, String apellidos, String email,
@@ -83,8 +83,14 @@ public class Usuario {
 		return new LinkedList<>(this.listaReciente);
 	}
 
-	public Map<ListaVideos, LinkedList<Video>> getListasVideos() {
+	public Map<Integer, ListaVideos> mapListasVideos() {
 		return new HashMap<>(this.listasVideos);
+	}
+
+	public LinkedList<ListaVideos> getListasVideos() {
+
+		return new LinkedList<>(this.listasVideos.values());// (LinkedList<ListaVideos>)
+															// this.listasVideos.values();
 	}
 
 	public String getPassword() {
@@ -129,5 +135,9 @@ public class Usuario {
 
 	public void setPremium(Boolean premium) {
 		this.premium = premium;
+	}
+
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
 	}
 }
