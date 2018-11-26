@@ -10,8 +10,8 @@ public class Video {
 	private int numeroReproducciones;
 	private List<Etiqueta> etiquetas;
 
-	public Video(int codigo, String url, String titulo, Etiqueta... etiquetas) {
-		this.codigo = codigo;
+	public Video(/*int codigo,*/ String url, String titulo, Etiqueta... etiquetas) {
+		//this.codigo = codigo;
 		this.url = url;
 		this.titulo = titulo;
 		for (Etiqueta etiqueta : etiquetas) {

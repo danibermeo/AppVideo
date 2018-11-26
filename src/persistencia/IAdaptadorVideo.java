@@ -5,7 +5,7 @@ import java.util.List;
 import modelo.Video;
 
 public interface IAdaptadorVideo {
-	public void registrarVideo(Video videos);
+	public int registrarVideo(Video video);
 
 	public void borrarVideo(Video video);
 

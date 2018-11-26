@@ -7,17 +7,13 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
-
 import com.toedter.calendar.JDateChooser;
-
 import java.util.Date;
-
 import beans.Entidad;
 import beans.Propiedad;
 import modelo.ListaVideos;
 import modelo.Usuario;
 import modelo.Video;
-
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
@@ -25,9 +21,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorUsuarioTDS unicaInstancia = null;
-
 	private SimpleDateFormat dateFormat;
-
 	public static AdaptadorUsuarioTDS getUnicaInstancia() {
 		if (unicaInstancia == null)
 			return new AdaptadorUsuarioTDS();
@@ -148,8 +142,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		// datos usuario
 		Date fechaNacimiento = null;
 		try {
-			fechaNacimiento = dateFormat
-					.parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fechaNacimiento"));
+			fechaNacimiento = dateFormat.parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fechaNacimiento"));
 		} catch (ParseException e) {
 
 			e.printStackTrace();
