@@ -56,5 +56,5 @@ public class Video {
 		
 		frame.getContentPane().add(videoWeb, BorderLayout.CENTER);
 	}
-
+	// tenemos q ver como  hacer un nuevo  componete 
 }

@@ -7,17 +7,13 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
-
 import com.toedter.calendar.JDateChooser;
-
 import java.util.Date;
-
 import beans.Entidad;
 import beans.Propiedad;
 import modelo.ListaVideos;
 import modelo.Usuario;
 import modelo.Video;
-
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
@@ -25,9 +21,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorUsuarioTDS unicaInstancia = null;
-
 	private SimpleDateFormat dateFormat;
-
 	public static AdaptadorUsuarioTDS getUnicaInstancia() {
 		if (unicaInstancia == null)
 			return new AdaptadorUsuarioTDS();
@@ -142,26 +136,25 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 			return (Usuario) PoolDAO.getUnicaInstancia().getObjeto(codigo);
 		}
 		// si no esta la recupero de la base de datos
-		Entidad eUsuasrio = servPersistencia.recuperarEntidad(codigo);
-		String nombreUsuario = servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "usuario");
-		String password = servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "password");
+		Entidad eUsuario = servPersistencia.recuperarEntidad(codigo);
+		String nombreUsuario = servPersistencia.recuperarPropiedadEntidad(eUsuario, "usuario");
+		String password = servPersistencia.recuperarPropiedadEntidad(eUsuario, "password");
 		// datos usuario
-		Date fechaNacimineto = null;
+		Date fechaNacimiento = null;
 		try {
-			fechaNacimineto = dateFormat
-					.parse(servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "fechaNacimiento"));
+			fechaNacimiento = dateFormat.parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fechaNacimiento"));
 		} catch (ParseException e) {
 
 			e.printStackTrace();
 		}
-		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "nombre");
-		String apellidos = servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "apellidos");
-		String email = servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "email");
+		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, "nombre");
+		String apellidos = servPersistencia.recuperarPropiedadEntidad(eUsuario, "apellidos");
+		String email = servPersistencia.recuperarPropiedadEntidad(eUsuario, "email");
 		// String premium =
 		// servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "premium");
-		boolean premium = Boolean.valueOf(servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "premium"));
+		boolean premium = Boolean.valueOf(servPersistencia.recuperarPropiedadEntidad(eUsuario, "premium"));
 		Usuario usuario = new Usuario(nombreUsuario, password, nombre, apellidos, email,
-				new JDateChooser(fechaNacimineto));
+				new JDateChooser(fechaNacimiento));
 		usuario.setCodigo(codigo);
 		usuario.setPremium(premium);
 		// recuperar propiedades que no son objetos
@@ -174,13 +167,13 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		// ventas
 		List<Video> recienteVideos = new LinkedList<>();
 		recienteVideos = obtenerVideosDesdeCodigos(
-				servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "recientesViddeos"));
+				servPersistencia.recuperarPropiedadEntidad(eUsuario, "recientesViddeos"));
 		for (Video video : recienteVideos) {
 			usuario.addRecienteVideos(video);
 		}
 		List<ListaVideos> listasVideos = new LinkedList<>();
 		listasVideos = obtenerListasVideosDesdeCodigos(
-				servPersistencia.recuperarPropiedadEntidad(eUsuasrio, "listasVideos"));
+				servPersistencia.recuperarPropiedadEntidad(eUsuario, "listasVideos"));
 		for (ListaVideos listaVideos : listasVideos) {
 			usuario.addListaAListaVideos(listaVideos);
 		}

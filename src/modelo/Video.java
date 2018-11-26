@@ -56,4 +56,10 @@ public class Video {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+	public void setNumeroReproducciones(Integer numeroReproducciones) {
+		this.numeroReproducciones = numeroReproducciones;
+	}
+	public void addEtiquetas(Etiqueta etiqueta){
+		this.etiquetas.add(etiqueta);
+	}
 }

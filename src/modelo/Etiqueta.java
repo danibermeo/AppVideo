@@ -2,6 +2,7 @@ package modelo;
 
 public class Etiqueta {
 	private String nombre;
+	private int codigo;
 
 	public Etiqueta(String nombre) {
 		this.nombre = nombre;
@@ -13,5 +14,13 @@ public class Etiqueta {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+
+	public int getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
 	}
 }
