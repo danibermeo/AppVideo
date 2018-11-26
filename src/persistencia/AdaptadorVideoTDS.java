@@ -4,19 +4,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringTokenizer;
+
 
 import beans.Entidad;
 import beans.Propiedad;
 import modelo.Etiqueta;
-import modelo.ListaVideos;
-import modelo.Usuario;
+
 import modelo.Video;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
 public class AdaptadorVideoTDS implements IAdaptadorVideo {
-	@SuppressWarnings("unused")
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorVideoTDS unicaInstancia = null;
 
