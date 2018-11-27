@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/danhi/OneDrive/Escritorio/TDS/Proyecto/AppVideo/lib/DriverPersistencia.jar"/>
+	<classpathentry kind="lib" path="C:/Users/danhi/OneDrive/Escritorio/TDS/Proyecto/AppVideo/lib/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/danhi/OneDrive/Escritorio/TDS/Proyecto/AppVideo/lib/Luz.jar"/>
+	<classpathentry kind="lib" path="C:/Users/danhi/OneDrive/Escritorio/TDS/Proyecto/AppVideo/lib/ServidorPersistencia.jar"/>
+	<classpathentry kind="lib" path="C:/Users/danhi/OneDrive/Escritorio/TDS/Proyecto/AppVideo/lib/VideoWeb.jar"/>
+	<classpathentry kind="lib" path="C:/Users/danhi/OneDrive/Escritorio/TDS/PersistenciaH2/H2/lib/eclipselink.jar"/>
+	<classpathentry kind="lib" path="C:/Users/danhi/OneDrive/Escritorio/TDS/PersistenciaH2/H2/lib/javax.persistence_2.0.3.v201010191057.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
