@@ -72,7 +72,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		)));
 
 		eUsuario = servPersistencia.registrarEntidad(eUsuario);
-		usuario.setCodigo(usuario.getCodigo());
+		usuario.setCodigo(eUsuario.getId());
 		return eUsuario.getId();
 
 	}
@@ -107,11 +107,11 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		servPersistencia.anadirPropiedadEntidad(eUsuario, "premium", String.valueOf(usuario.isPremium()));
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "usuario");
 		servPersistencia.anadirPropiedadEntidad(eUsuario, "usuario", usuario.getNombreUsuario());
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "fechaNaciemto");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "fechaNaciento",
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, "fechaNacimiento");
+		servPersistencia.anadirPropiedadEntidad(eUsuario, "fechaNacimiento",
 				String.valueOf(dateFormat.format(usuario.getFechaNacimiento().getDate())));
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "listasVideos");
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "listaReceintes");
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, "listaReciente");
 		servPersistencia.anadirPropiedadEntidad(eUsuario, "listaReciente",
 				obtenerCodigosVideosDeLista(usuario.getListaReciente()));
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "listasVideos");
@@ -143,7 +143,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 			eUsuario = servPersistencia.recuperarEntidad(codigo);
 
 		} catch (NullPointerException e) {
-			System.err.println("Adaotador Usuario");
+			System.err.println("Adaptador Usuario");
 		}
 
 		String nombreUsuario = servPersistencia.recuperarPropiedadEntidad(eUsuario, "usuario");
@@ -175,7 +175,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		// ventas
 		List<Video> recienteVideos = new LinkedList<>();
 		recienteVideos = obtenerVideosDesdeCodigos(
-				servPersistencia.recuperarPropiedadEntidad(eUsuario, "recientesViddeos"));
+				servPersistencia.recuperarPropiedadEntidad(eUsuario, "listaReciente"));
 		for (Video video : recienteVideos) {
 			usuario.addRecienteVideos(video);
 		}

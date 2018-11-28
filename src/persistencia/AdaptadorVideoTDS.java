@@ -108,20 +108,20 @@ public class AdaptadorVideoTDS implements IAdaptadorVideo {
 		String url = servPersistencia.recuperarPropiedadEntidad(eVideo, "url");
 		Integer numeroReproducciones = Integer
 				.valueOf(servPersistencia.recuperarPropiedadEntidad(eVideo, "numeroReproducciones"));
-		// le quito el codigo
+		
 		Video video = new Video(url, titulo);
+		video.setCodigo(codigo);
 		video.setNumeroReproducciones(numeroReproducciones);
 
 		// Pool issues?
 		// TODO verificar objetos globalmente compartidos
-		video.setCodigo(codigo);
-		String stringEtiquetas = obtenerCodigosListasEtiqueta(video.getEtiquetas());
-		List<Etiqueta> etiquetas = new LinkedList<>();
-		etiquetas = obtenerEtiquetasDesdeCodigos(stringEtiquetas);
-
-		for (Etiqueta etiqueta : etiquetas) {
-			video.addEtiquetas(etiqueta);
+		List<Etiqueta> etiqueta = new LinkedList<>();
+		etiqueta = obtenerEtiquetasDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eVideo, "etiquteas"));
+		
+		for (Etiqueta eti : etiqueta) {
+			video.addEtiquetas(eti);
 		}
+		
 		PoolDAO.getUnicaInstancia().addObjeto(codigo, video);
 		return video;
 	}
@@ -150,7 +150,7 @@ public class AdaptadorVideoTDS implements IAdaptadorVideo {
 
 		String codigos = "";
 		for (Etiqueta eti : list) {
-			codigos += eti.toString() + " ";
+			codigos += eti.getCodigo() + " ";
 		}
 		return codigos.trim();
 	}
@@ -158,10 +158,11 @@ public class AdaptadorVideoTDS implements IAdaptadorVideo {
 	private List<Etiqueta> obtenerEtiquetasDesdeCodigos(String recuperarPropiedadEntidad) {
 		List<Etiqueta> etiquetas = new LinkedList<>();
 		StringTokenizer token = new StringTokenizer(recuperarPropiedadEntidad, " ");
+		AdaptadorEtiquetaTDS adaptadorEtiqueta = AdaptadorEtiquetaTDS.getUnicaInstancia();
 		while (token.hasMoreTokens()) {
-			Etiqueta eti = new Etiqueta(token.nextToken());
-			etiquetas.add(eti);
+			etiquetas.add(adaptadorEtiqueta.recuperarEtiqueta(Integer.valueOf(token.nextToken())));
 		}
 		return etiquetas;
 	}
+
 }
